@@ -132,6 +132,7 @@ exit
 > **2: Press on Ctrl + D**
 
 
+	
 ### List of comands you can use
 
 | Commands | Description |
@@ -153,8 +154,6 @@ Mohammed Bheser -
         <img src="https://avatars.githubusercontent.com/u/61684834?v=4">
 </a>
 </p>
-
-
 
 <p align="center">
 Cent Bedada -
