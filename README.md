@@ -28,6 +28,21 @@ At the end of this project, you are expected to be able to explain to anyone, wi
 * How to suspend the execution of a process until one of its children terminates
 * What is EOF / “end-of-file”?
 
+****
+## Table of contents
+ - **What is the shell?**
+ - **About this project**
+ - **Essential Functionalities of the Simple Shell**
+ - **File description**
+ - **List of allowed functions and system calls for this project**
+ - **USAGE**
+ - **Example of Usage**
+ - **Bugs**
+ - **TEAM**
+ ****
+
+## What is the shell?
+The shell is a program that takes commands from the keyboard via the terminal, and gives them to the operating system to perform.\
 
 
 
@@ -46,35 +61,74 @@ At the end of this project, you are expected to be able to explain to anyone, wi
 ### GitHub
 There should be one project repository per group. If you clone/fork/whatever a project repository with the same name before the second deadline, you risk a 0% score.
 
- ## Files Contained on this repository
+## Essential Functionalities of the Simple Shell:
+> Displays a prompt "#cisfun$ " and waits for user input.\
+> Runs all commands of type "executable program" (ls and /bin/ls).\
+> Runs the following build_in commands: **exit**, **env**, **setenv** and **unsetenv**.\
+> Handles commands with arguments.\
+> Handles the PATH global variable.\
+> Handles The EOF (End Of File) condition.\
+> Handles the Ctrl + C signal -> It doesn't exit the shell
 
-| File | Description |
-|--|--|
-| **AUTHORS** | Contains the authors of the Simple Shell program. |
-| **README.md** | Contains an overview of Simple Shell. Important things that you should know before executes our Simple Shell program. |
-| **main.c** | simple shell program that 1) checks if in interactice/noninteractice mode 2) prints prompt and waits for user input 3) splits user input into an array 4) prints prompt again if in interactice mode.
-| **man_1_simple_shell** | man page for our shell. |
-| **shell.h** | header file containing function prototypes, struct definitions, macros, standard libraries |
-| **shell.c** ||
+## Files description
+ - **AUTHORS** -> List of contributors to this repository
+ - **man_1_simple_shell** -> Manual page for the simple_shell
+ - **shell.h** -> Header file
+ - **shell.c** -> main function
+	- **sig_handler** -> handles the Ctrl + C signal
+	- **_EOF** -> handles the End Of File condition
+ - **string.c**
+	- **_putchar** -> prints a character
+	- **_puts** -> prints a string
+	- **_strlen** -> gives the length of a string
+	- **_strdup** -> copies a string in a newly allocated memory
+	- **concat_all** -> concatenates 3 strings in a newly allocated memory
+ - **line_exec.c**
+	- **splitstring** -> splits a string into an array of words
+	- **execute** -> executes a command using execve
+	- **realloc** -> reallocates a memory block
+	- **freearv** -> frees a 2 dimensional array
+ - **linkpath.c**
+	- **_getenv** -> returns the value of a global variable
+	- **add_node_end** -> adds a node in a singly linked list
+	- **linkpath** -> creates a singly linked list for PATH directories
+	- **_which** -> finds the pathname of a command
+	- **free_list** -> frees the linked list of PATH value
+ - **checkbuild.c**
+	- **checkbuild** -> checks if a command is a build-in command
+ - **buildin.c**
+	- **exitt** -> handles the exit buildin command
+	- **_atoi** -> converts a string into an integer
+	- **env** -> prints the current environment
+	- **_setenv** -> Initialize a new global variable, or modify an existing one
+	- **_unsetenv** -> remove a global variable
+***
+## USAGE
+You can try our shell by following these steps:
+> **Step 1:** Clone our repository using this command, (you need to have git installed on your machine first)
+````
+git clone https://github.com/MatriMariem/simple_shell
+````
+> **Step 2:** Change directory to simple_shell:
+````
+cd simple_shell
+````
+> **Step 3:** Compile the C files in this way:
+````
+gcc -Wall -Werror -Wextra -pedantic *.c -o hsh
+````
+> **Step 4:** Run the shell
+````
+./hsh
+````
+**Exiting the shell**
+When you want to exit the shell, you can use one of the following methods:
+> **1: Type the command "exit"**
+````
+exit
+````
+> **2: Press on Ctrl + D**
 
-
-Compilation
-Your shell will be compiled this way:
-```
-gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
-```
-### Testing
-
-Your shell should work like this in interactive mode:
-
-```
-$ ./hsh
-($) /bin/ls
-hsh main.c shell.c
-($)
-($) exit
-$
-```
 
 ### List of comands you can use
 

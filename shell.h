@@ -5,65 +5,63 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <errno.h>
+#include <stddef.h>
+#include <sys/stat.h>
+#include <signal.h>
+
+int _putchar(char c);
+void _puts(char *str);
+int _strlen(char *s);
+char *_strdup(char *str);
+char *concat_all(char *name, char *sep, char *value);
+
+char **splitstring(char *str, const char *delim);
+void execute(char **argv);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+
+
+extern char **environ;
 
 /**
- * struct var_s - struct for commands and tokens.
- * @status: character to match after find  a percentage.
- * @contk: function that will be called when it.
- * @tk_i: the character.
- * @nameShell: save name of shell.
- * @comand: command input.
- * @tokens: save tokens of the comands.
- * typedef var_t: new name struct.
+ * struct list_path - Linked list containing PATH directories
+ * @dir: directory in path
+ * @p: pointer to next node
  */
-typedef struct var_s
+typedef struct list_path
 {
-	int status;
-	int contk;
-	int tk_i;
-	char *nameShell;
-	char *comand;
-	char **tokens;
+	char *dir;
+	struct list_path *p;
+} list_path;
 
-} var_t;
+
+char *_getenv(const char *name);
+list_path *add_node_end(list_path **head, char *str);
+list_path *linkpath(char *path);
+char *_which(char *filename, list_path *head);
 
 /**
- * struct var_c - struct for commands and tokens.
- * @cmd: Especial command.
- * @p: pointer function.
- * typedef var_c: new name struct.
+ * struct mybuild - pointer to function with corresponding buildin command
+ * @name: buildin command
+ * @func: execute the buildin command
  */
-typedef struct var_c
+typedef struct mybuild
 {
-	char *cmd;
-	int (*p)(var_t *, char **);
+	char *name;
+	void (*func)(char **);
+} mybuild;
 
-} var_ec;
+void(*checkbuild(char **arv))(char **arv);
+int _atoi(char *s);
+void exitt(char **arv);
+void env(char **arv);
+void _setenv(char **arv);
+void _unsetenv(char **arv);
 
-void promptvi(void);
-void sighandler(int);
-int tokens(var_t *vars, char **env);
-int execute(var_t *vars, char **env);
-int searchRoadPATH(var_t *vars, char **env);
-int RoadConcatCommand(var_t *vars, char *path_tokens, char **env);
-int isCommand(var_t *vars, char **env);
-int isEspecialCommand(var_t *vars, char **env);
-int exitFun(var_t *vars, char **env);
-int cdFun(var_t *vars, char **env);
-int enviro(var_t *vars, char **env);
-int help(var_t *vars, char **env);
-char print_help(char *ptr);
-char *str_cat(char *s1, char *s2);
-char *str_dup(char *str);
-size_t len_str(char *str);
+void freearv(char **arv);
+void free_list(list_path *head);
 
-int countPipe(char comand[]);
-int countFlux(char comand[]);
-void finalComandTokens(char *finalTokens[], char comand[]);
-void executeBasicComand(char *tokens[], char comand[]);
 
 #endif
