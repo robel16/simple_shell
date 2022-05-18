@@ -1,89 +1,141 @@
-#include "shell.h"
+#include "main.h"
 
 /**
- * sig_handler - checks if Ctrl C is pressed
- * @sig_num: int
+ * shell - implement shell functionality
+ * @env_list: list of environment variables
+ * @shell_name: name of shell program
+ *
+ * Return: 0 success. Non-zero otherwise
  */
-void sig_handler(int sig_num)
+int shell(list_t *env_list, char *shell_name)
 {
-	if (sig_num == SIGINT)
-	{
-		_puts("\n#cisfun$ ");
-	}
-}
+	char *input, *full_name;
+	list_t *input_list;
+	char **input_array;
+	pid_t child_pid;
+	int status, built_ret;
 
-/**
-* _EOF - handles the End of File
-* @len: return value of getline function
-* @buff: buffer
- */
-void _EOF(int len, char *buff)
-{
-	(void)buff;
-	if (len == -1)
+	while (1)
 	{
-		if (isatty(STDIN_FILENO))
+		input = get_input();
+		if (input == NULL)
 		{
-			_puts("\n");
-			free(buff);
+			return (0);
 		}
-		exit(0);
-	}
-}
-/**
-  * _isatty - verif if terminal
-  */
 
-void _isatty(void)
-{
-	if (isatty(STDIN_FILENO))
-		_puts("#cisfun$ ");
-}
-/**
- * main - Shell
- * Return: 0 on success
- */
-
-int main(void)
-{
-	ssize_t len = 0;
-	char *buff = NULL, *value, *pathname, **arv;
-	size_t size = 0;
-	list_path *head = '\0';
-	void (*f)(char **);
-
-	signal(SIGINT, sig_handler);
-	while (len != EOF)
-	{
-		_isatty();
-		len = getline(&buff, &size, stdin);
-		_EOF(len, buff);
-		arv = splitstring(buff, " \n");
-		if (!arv || !arv[0])
-			execute(arv);
-		else
+		if (input[0] == '\n')
 		{
-			value = _getenv("PATH");
-			head = linkpath(value);
-			pathname = _which(arv[0], head);
-			f = checkbuild(arv);
-			if (f)
+			free(input);
+			continue;
+		}
+
+		/* check input */
+		input_list = split_string(input, " ");
+		if (input_list == NULL)
+		{
+			free(input);
+			continue;
+		}
+
+		/* check if input is a built-in command */
+		built_ret = get_built(input_list, shell_name, env_list);
+		if (built_ret < -1)
+		{
+			free_list(input_list);
+			free(input);
+			continue;
+		}
+		else if (built_ret >= 0)
+		{
+			free_list(input_list);
+			free(input);
+			return (built_ret);
+		}
+
+		/* check if 1st string is a valid command */
+		full_name = get_full_name(input_list->name, env_list);
+		if (full_name == NULL)
+		{
+			print_error(shell_name, "No such file or directory\n");
+			free_list(input_list);
+			free(input);
+			continue;
+		}
+
+		/* change name of command to its full name */
+		free(input_list->name);
+		input_list->name = full_name;
+
+		/* change input_list to input_array */
+		input_array = list_to_array(input_list);
+		free_list(input_list);
+		if (input_array == NULL)
+		{
+			print_error(shell_name, "No commands\n");
+			free(input);
+			continue;
+		}
+
+		/* create child process */
+		child_pid = fork();
+		if (child_pid == -1)
+		{
+			print_error(shell_name, "fork error\n");
+			free_array(input_array);
+			free(input);
+			return (1);
+		}
+
+		/* execute command */
+		if (child_pid == 0)
+		{
+			if (execve(input_array[0], input_array, NULL) == -1)
 			{
-				free(buff);
-				f(arv);
-			}
-			else if (!pathname)
-				execute(arv);
-			else if (pathname)
-			{
-				free(arv[0]);
-				arv[0] = pathname;
-				execute(arv);
+				print_error(shell_name, "execve error\n");
+				free_array(input_array);
+				free(input);
+				return (126);
 			}
 		}
+
+		wait(&status);
+		free_array(input_array);
+		free(input);
 	}
-	free_list(head);
-	freearv(arv);
-	free(buff);
+
 	return (0);
+}
+
+/**
+ * get_input - gets input from the terminal
+ *
+ * Return: string input. Otherwise NULL
+ */
+char *get_input(void)
+{
+	char *buffer = NULL;
+	size_t bufferSize = 0;
+	char prompt[] = "#cisfun$ ";
+
+	write(STDOUT_FILENO, prompt, sizeof(prompt));
+	if (getline(&buffer, &bufferSize, stdin) == -1)
+	{
+		write(STDOUT_FILENO, "\n", 2);
+		free(buffer);
+		return (NULL);
+	}
+
+	return (_strlen(buffer) == 1 ? buffer : _strtok(buffer, "\n"));
+}
+
+/**
+ * print_error - prints given error message to stderr
+ * @shell_name: name of shell program
+ * @message: error message
+ */
+void print_error(char *shell_name, char *message)
+{
+	write(STDERR_FILENO, shell_name, _strlen(shell_name) + 1);
+	write(STDERR_FILENO, ": ", 3);
+	write(STDERR_FILENO, message, _strlen(message) + 1);
 }

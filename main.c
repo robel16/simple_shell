@@ -1,34 +1,51 @@
-#include "holberton.h"
+#include "main.h"
 
 /**
- * main - principal function
- * @argc: is an int
- * @argv: is a char
- * @environ: global variable
- * Return: 0
+ * main - implements super simple shell
+ *
+ * @ac: number of commandline arguments
+ * @av: array of commandline arguments
+ * @env: array of environment variables
+ *
+ * Return: 0 success. 1 otherwise
  */
-
-int main(int argc, char **argv, char **environ)
+int main(int ac, char **av, char **env)
 {
-	char *line = NULL;
-	char *delim = "\t \a\n";
-	char *command;
-	char **tokens;
-	(void)argc;
+	list_t *env_list = NULL;
+	int shell_return;
 
-	tokens = find_path(environ);
+	/* create env_list */
+	env_list = create_env(env, env_list);
 
-	signal(SIGINT, SIG_IGN);
-	while (1)
+	/* handle SIGINT */
+	signal(SIGINT, sig_handler);
+
+	/* start shell */
+	shell_return = shell(env_list, av[0]);
+
+	/*check return value of shell */
+	if (shell_return)
 	{
-		line = read_line();
-		argv = splits(line, delim);
-		command = args_path(argv, tokens);
-		if (command == NULL)
-			execute(argv);
-		free(line);
-		free(argv);
-		free(command);
+		free_list(env_list);
+		exit(shell_return);
 	}
+
+	(void)ac;
+
+	free_list(env_list);
+
 	return (0);
+}
+
+/**
+ * sig_handler - handles SIGINT
+ * @sig: SIGINT
+ */
+void sig_handler(int sig)
+{
+	char prompt[] = "#cisfun$ ";
+
+	signal(sig, sig_handler);
+	write(STDOUT_FILENO, "\n", 2);
+	write(STDOUT_FILENO, prompt, sizeof(prompt));
 }
