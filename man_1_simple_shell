@@ -1,6 +1,6 @@
-.TH man 1 "Dic 07  2021"  "Holberton School 0x16. C - Simple Shell"
+.TH man 1 "Dic 07  2022"  "ALX School 0x16. C - Simple Shell"
 .SH NAME
-    hsh - Holberton Simple Shell: command line interpreter
+    hsh - ALX Simple Shell: command line interpreter
 .PP
 .SH SYNOPSIS
 .B hsh
@@ -62,9 +62,8 @@ There are memory leaks when exiting the shell.
 This will be fixed in a later version of this shell.
 .PP
 .SH AUTHORS
-Pheter Tejada <3723@holbertonschool.com>
-
-Edgar Condo <3729@holbertonschool.com>
+Mohammed Bheser <3723@holbertonschool.com>
+Cent Bedada <3729@holbertonschool.com>
 .PP
 .SH SEE ALSO
 .BR man
