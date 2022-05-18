@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <stdio.h>
 
 /**
 * checkbuild - checks if the command is a buildin

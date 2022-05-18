@@ -1,78 +1,27 @@
-.TH SHELL 1 "27 November 2019" GNU "Shell man page"
+.TH hsh 1 "August 2019" "1.0" "hsh - Simple Shell General Commands Manual"
 .SH NAME
-.B hsh
-- Command line interpreter (shell)
+hsh - Simple Shell
 .SH SYNOPSIS
-The shell is executed by typing ./hsh
-.br
-Then, it will wait for an input such as : command [arguments] [other]
+.B hsh
+.I [OPTIONS] [FILE]
+.B Interactive mode
+.I [command_name][option_name][argument ...]
 .SH DESCRIPTION
-This shell is a project dedicated to our studies. My partner and I, have tried to mimic the behavior of a real shell. In case you don't know what a shell is (I doubt that) here is a brief explanation. A shell is a command language interpreter that executes commands read from the standard input or from a file. Our shell does not support the arguments passed to it, yet. We are still working on it.
-.br
-.B What hsh can do :
-.br
-- Executes any command with its arguments
-.br
-- Executes built-in commands
-.br
-- Handle pipes
-.br
-- Handle the command seperator ;
-.br
-- Handle && and || logical operators
-.br
-- handle variable replacement
-.br
-- handle the $? variable
-.br
-- handle the $$ variable
-.SH BUILT-IN FUNCTIONS
-Those are the available built-in functions :
-.br
- - exit : exit the shell
-.br
- - cd : Change Directory
-.br
- - help : Display the help page
-.br
- - history : Display history of commands used
-.br
- - alias : Put an alias for a command
-.br
- - env : Display the environment variables
-.SH OPTIONS
-There are no options for the moment.
-.SH EXIT STATUS
-The exit value depends on how a function has terminated. Every error is identified by a certain value. On success it will always return 0.
-.SH RETURN VALUE
-Return 0 on success, otherwise it will return the exit value.
-.SH ENVIRONMENT
-- PATH
-.br
-- $?
-.br
-- $$
-.SH BUGS
-There is no known bugs at the moment.
-.SH EXAMPLE
-.B Two ways to execute our shell :
-.br
-.B The intercative mode :
-.br
- $ ./hsh
-.br
- #cisfun$ /bin/ls
-.br
- hsh main.c shell.c
-.br
- #cisfun$ exit
-.br
+The simple shell is a program that takes commands from the keyboard and gives them to the operating system to perform. It incorporates many features and generally executes other commands. An interactive shell generally prompts before each command, inspects arguments, execute them and handles possible errors. The simple shell reads input in terms of lines from a file and breaks it up into words at whitespaces. 
+.SH EXAMPLES
+$ ./hsh
+ simple@shell $ /bin/ls
+ README.md exec.c holberton.h main.c prompt.c
+ simple@shell $
+ simple@shell $ exit
  $
-.br
-.B The non-interactive mode :
-.br
+.PP
  $ echo "/bin/ls" | ./hsh
-.br
- hsh main.c shell.c
+ README.md exec.c holberton.h main.c prompt.c
+ $
+.SH SEE ALSO
+sh(1)
+.SH BUGS
+Keep in mind this is still a Work in progress and does not have fully functionality of a shell
 .SH AUTHORS
-Mariem Matri, Inès Chokri
+Written by Geraldinne Bohórquez & Diego Monroy
