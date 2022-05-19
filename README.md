@@ -1,12 +1,4 @@
-Alx second group project
 
-Simple_shell
-
-Author 
-
-Tsegamlak Paulos
-
-Abraham Alem
 <h1 align="center" >
 <br>
     <img src="https://www.alxafrica.com/wp-content/uploads/2022/01/header-logo.png" height="50%" width="40%">
